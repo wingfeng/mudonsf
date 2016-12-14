@@ -8,9 +8,10 @@ namespace FacilityService.Interface.Enum
 {
     public enum PlayerStatus
     {
-        login,
-        quit,
-        idle,
-        NotExist,
+        Connecting,
+        Active,
+        Quit,
+        Idle,
+        NotExist
     }
 }

@@ -2,7 +2,7 @@
 {
     public interface ICommand
     {
-        object Invoker { get; }
+        PlayerProxy Invoker { get; }
      
 
         void Execute();

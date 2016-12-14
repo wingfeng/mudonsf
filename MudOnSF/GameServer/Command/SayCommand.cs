@@ -19,14 +19,14 @@ namespace GameServer
             if (string.IsNullOrWhiteSpace(msg))
                 return;
 
-            Player owner = Invoker as Player;
+            PlayerProxy owner = Invoker as PlayerProxy;
             var i = msg.LastIndexOf("\r\n");
             if (i < 0)
                 msg = string.Format("\x1B[0;1;36m自言自语:{0}\x1B[0m\r\n", msg);
-            foreach (Player p in owner.Server.Players)
-            {
-                p.Notify(msg);
-            }
+            //foreach (PlayerProxy p in owner.Server.Players)
+            //{
+            //    p.Notify(msg);
+            //}
         }
     }
 }

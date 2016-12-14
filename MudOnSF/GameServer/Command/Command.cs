@@ -8,13 +8,13 @@ namespace GameServer
 {
     public class Command : ICommand
     {
-        object invoker;
+        public PlayerProxy Invoker { get; set; }
         object body;
         public Command(object _invoker,object body)
         {
-            invoker = _invoker;
+            Invoker = _invoker as PlayerProxy;
         }
-        public Object Invoker { get { return invoker; } }
+   
         public virtual void Execute() { }
     }
 }

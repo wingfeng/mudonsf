@@ -12,17 +12,17 @@ namespace GameServer
     public class LookCommand:Command
     {
         private Uri roomServiceUri = new Uri("fabric:/MudOnSF/RoomActorService");
-        Player Invoker;
+     
         public LookCommand(object _invoker,object body) : base(_invoker, body) {
-            Invoker = _invoker as Player;
+            Invoker = _invoker as PlayerProxy;
         }
         public async override void Execute()
         {
             IRoomActor roomActor = ActorProxy.Create<IRoomActor>(new Microsoft.ServiceFabric.Actors.ActorId(Invoker.State.RoomId), roomServiceUri);
            var room = await roomActor.GetRoom(Invoker.State.RoomId);
             var players = room.Players;
-            Invoker.Notify(room.Name + "\r\n", false);
-            Invoker.Notify(room.Description,false);
+            Invoker.Notify(room.Name + "\r\n",true, false);
+            Invoker.Notify(room.Description,true,false);
             string msg = "房间里有\r\n----------\r\n";
             foreach(string p in players)
             {
@@ -30,7 +30,7 @@ namespace GameServer
                 
             }
             msg += "----------\r\n";
-            Invoker.Notify(msg);
+            Invoker.Notify(msg,true,true);
         }
     }
 }

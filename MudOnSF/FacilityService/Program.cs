@@ -25,6 +25,9 @@ namespace FacilityService
                    (context, actorType) => new ActorService(context, actorType)).GetAwaiter().GetResult();
                 ActorRuntime.RegisterActorAsync<RoomActorService>(
                     (context, actorType) => new ActorService(context, actorType)).GetAwaiter().GetResult();
+                ActorRuntime.RegisterActorAsync<PlayerActorService>(
+                                   (context, actorType) => new ActorService(context, actorType)).GetAwaiter().GetResult();
+
                 Thread.Sleep(Timeout.Infinite);
             }
             catch (Exception e)

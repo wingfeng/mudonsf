@@ -1,4 +1,5 @@
 ﻿using FacilityService.Interface.State;
+using Microsoft.ServiceFabric.Actors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,14 @@ using System.Threading.Tasks;
 
 namespace FacilityService.Interface
 {
-    public interface IPlayerActor
+    public interface IPlayerActor: IActor
     {
-        PlayerState GetState();
-        string CurrentRoom { get; set; }
-        void Kill(ICharacter target);
-        void Look(ICharacter target);
+        Task SetState(PlayerState state);
+        Task<PlayerState> GetState();
+
+        Task<bool> CheckPassword(string password);
+        Task Kill(ICharacter target);
+        Task Look(ICharacter target);
+        Task Notify(string msg,bool withPrompt);
     }
 }

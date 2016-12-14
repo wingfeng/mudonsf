@@ -10,22 +10,29 @@ namespace GameServer
 {
     public static class TCPClientExtension
     {
-        public static void WriteMessage(this TcpClient client,string message)
+        public static void WriteMessage(this TcpClient client, string message)
         {
-            StreamWriter writer = new StreamWriter(client.GetStream(),
-                                       Encoding.UTF8);
-            writer.Write(message);
-            //Write Prompt;
-           
-            writer.Flush();
+            lock (client)
+            {
+                if (!client.Connected)
+                    return;
+
+                StreamWriter writer = new StreamWriter(client.GetStream(),
+                                           Encoding.UTF8);
+                writer.Write(message);
+                //Write Prompt;
+
+                writer.Flush();
+            }
         }
-        public static string ReadCommand(this TcpClient client)
+        public static  string ReadCommand(this TcpClient client)
         {
             byte[] message = new byte[4096];
             var encoder = Encoding.UTF8;
             int bytesRead;
             string finalMessage = "";
             var stream = client.GetStream();
+           
             while (!finalMessage.EndsWith("\r\n"))
             {
                 bytesRead = 0;
@@ -33,7 +40,7 @@ namespace GameServer
                 //try reading from the client stream
                 try
                 {
-                    bytesRead = stream.Read(message, 0, 4096);
+                    bytesRead =stream.Read(message, 0, 4096);
                     finalMessage += encoder.GetString(message, 0, bytesRead);
                 }
                 catch (Exception e)
@@ -57,7 +64,7 @@ namespace GameServer
                 } while (finalMessage.Contains("\b"));
 
             }
-
+          
             return finalMessage.TrimEnd('\r', '\n');
         }
     }

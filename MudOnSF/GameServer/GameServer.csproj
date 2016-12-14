@@ -86,9 +86,10 @@
     <Compile Include="Command\Command.cs" />
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\LookCommand.cs" />
+    <Compile Include="Command\QuitCommand.cs" />
     <Compile Include="Command\SayCommand.cs" />
     <Compile Include="Command\ShoutCommand.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="PlayerProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameServer.cs" />
     <Compile Include="Program.cs" />
@@ -106,6 +107,10 @@
     <ProjectReference Include="..\FacilityService.Interface\FacilityService.Interface.csproj">
       <Project>{02ee5f48-4d72-4831-a2fc-7ca17dfcdaf3}</Project>
       <Name>FacilityService.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameServer.Interface\GameServer.Interface.csproj">
+      <Project>{c299e58c-21e4-458b-853d-fd57eac9e913}</Project>
+      <Name>GameServer.Interface</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -7,7 +7,10 @@
   <ServiceTypes>
     <!-- This is the name of your ServiceType. 
          This name must match the string used in RegisterServiceType call in Program.cs. -->
-    <StatefulServiceType ServiceTypeName="GameServerType" HasPersistedState="true" />
+    <StatefulServiceType ServiceTypeName="GameServerType" HasPersistedState="true" >
+     
+    </StatefulServiceType>
+    
   </ServiceTypes>
 
   <!-- Code package is your service executable. -->
@@ -28,12 +31,13 @@
       <!-- This endpoint is used by the communication listener to obtain the port on which to 
            listen. Please note that if your service is partitioned, this port is shared with 
            replicas of different partitions that are placed in your code. -->
-      <Endpoint Name="ServiceEndpoint" />
-
+      <Endpoint Name="TelnetEndpoint" Type="Input" Protocol="tcp" Port="9980" />
+      <Endpoint Name="RPCEndpoint" Type="Internal" UriScheme="rpc" Protocol="tcp" Port="10010"/>
       <!-- This endpoint is used by the replicator for replicating the state of your service.
            This endpoint is configured through a ReplicatorSettings config section in the Settings.xml
            file under the ConfigPackage. -->
       <Endpoint Name="ReplicatorEndpoint" />
     </Endpoints>
   </Resources>
+  
 </ServiceManifest>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameServer.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,15 +18,18 @@ namespace GameServer
         public override void Execute()
         {
             if (string.IsNullOrWhiteSpace(msg))
+            {
+                Invoker.Notify("你想说什么？\r\n");
                 return;
-
-            Player owner = Invoker as Player;
+            }
+           
             var i = msg.LastIndexOf("\r\n");
             if (i < 0)
                 msg = string.Format("\x1B[0;1;33m风云:{0}\x1B[0m\r\n", msg);
-            foreach (Player p in owner.Server.Players)
+
+            foreach (KeyValuePair<string,PlayerProxy> p in Invoker.Server.Players)
             {
-                p.Notify(msg);
+                p.Value.Notify(msg,false,true);
             }
         }
     }

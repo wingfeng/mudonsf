@@ -7,37 +7,50 @@ using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Data.Collections;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
-
+using GameServer.Interface;
+using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 namespace GameServer
 {
     /// <summary>
     /// An instance of this class is created for each service replica by the Service Fabric runtime.
     /// </summary>
-    internal sealed class GameServer : StatefulService
+    internal sealed class GameServer : StatefulService, IGameServer
     {
+        private TelnetListener GameListener;
         public GameServer(StatefulServiceContext context)
             : base(context)
         { }
 
-        /// <summary>
-        /// Optional override to create listeners (e.g., HTTP, Service Remoting, WCF, etc.) for this service replica to handle client or user requests.
-        /// </summary>
-        /// <remarks>
-        /// For more information on service communication, see https://aka.ms/servicefabricservicecommunication
-        /// </remarks>
-        /// <returns>A collection of listeners.</returns>
+        public async Task NotifyPlayer(string playerName, string msg,bool withPrompt)
+        {
+            var pProxy = GameListener.GetProxy(playerName);
+            if (pProxy != null)
+            {
+                if(pProxy.State.Server==Context.NodeContext.IPAddressOrFQDN)
+                     pProxy.Notify(msg, true,withPrompt);
+            }
+        }
+        public Dictionary<string, PlayerProxy> Players
+        {
+            get { return GameListener.Players; }
+        }
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
-            return new[]
-   {
+            var rpcListener = this.CreateServiceRemotingListener<GameServer>(Context);
+           
+            GameListener = new TelnetListener(Context) { Server = this };
 
-        new ServiceReplicaListener(context =>
-            new TelnetListener(context) { },
-            "TelnetListener",
-            true)
+            var rpcEndpoint=new ServiceReplicaListener(context=>rpcListener,"RPCEndpoint");
+            
+            var telnetListener = new ServiceReplicaListener(context =>
+                      GameListener,
+                 "TelnetEndpoint");
 
-            };
+
+
+            return new ServiceReplicaListener[] { rpcEndpoint, telnetListener };
         }
+
 
         /// <summary>
         /// This is the main entry point for your service replica.
@@ -73,6 +86,6 @@ namespace GameServer
             //}
         }
 
-      
+
     }
 }

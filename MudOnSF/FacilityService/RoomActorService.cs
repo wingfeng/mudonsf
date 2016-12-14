@@ -37,7 +37,7 @@ namespace FacilityService
 
         public async Task<RoomState> Enter(PlayerState player,string name="")
         {
-             State = await this.StateManager.GetStateAsync<RoomState>("State") as RoomState;
+          //   State = await this.StateManager.GetStateAsync<RoomState>("State") as RoomState;
            
             if (State == null && string.IsNullOrWhiteSpace(name))
             {
@@ -54,7 +54,7 @@ namespace FacilityService
                 State = tmpState;
             }
             State.Players.Add(player.Name);
-            StateManager.SetStateAsync<RoomState>("State", State);
+            await StateManager.SetStateAsync<RoomState>("State", State);
 
             return State;
         }
